@@ -1,0 +1,42 @@
+[
+  {
+    "id": "acc_cash",
+    "name": "Efectivo",
+    "type": "cash",
+    "currency": "MXN",
+    "openingBalance": 0,
+    "isActive": true,
+    "order": 1,
+    "householdId": "household_default"
+  },
+  {
+    "id": "acc_debit",
+    "name": "Tarjeta Débito",
+    "type": "debit",
+    "currency": "MXN",
+    "openingBalance": 0,
+    "isActive": true,
+    "order": 2,
+    "householdId": "household_default"
+  },
+  {
+    "id": "acc_credit",
+    "name": "Tarjeta Crédito",
+    "type": "credit",
+    "currency": "MXN",
+    "openingBalance": 0,
+    "isActive": true,
+    "order": 3,
+    "householdId": "household_default"
+  },
+  {
+    "id": "acc_savings",
+    "name": "Ahorros",
+    "type": "savings",
+    "currency": "MXN",
+    "openingBalance": 0,
+    "isActive": true,
+    "order": 4,
+    "householdId": "household_default"
+  }
+]
