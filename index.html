@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <title>Seed Firestore (Accounts & Categories)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    body { font-family: system-ui, Arial, sans-serif; margin: 24px; }
+    .card { border: 1px solid #ddd; border-radius: 12px; padding: 16px; max-width: 780px; }
+    .row { margin-bottom: 12px; display: flex; gap: 8px; flex-wrap: wrap; }
+    input[type="file"] { padding: 6px; }
+    button { padding: 8px 12px; cursor: pointer; }
+    pre { background: #fafafa; border: 1px solid #eee; padding: 12px; border-radius: 8px; max-height: 300px; overflow: auto; }
+    .ok { color: #0a7f2e; }
+    .err { color: #b00020; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>Firestore Seeder</h1>
+    <p>Inicia sesión y sube tus <code>accounts.json</code> / <code>categories.json</code> para crear/actualizar documentos.</p>
+
+    <h3>1) Sign in</h3>
+    <div class="row">
+      <input id="email" type="email" placeholder="Email" />
+      <input id="password" type="password" placeholder="Password" />
+      <button id="btnSignUp">Sign Up</button>
+      <button id="btnSignIn">Sign In</button>
+      <button id="btnSignOut">Sign Out</button>
+    </div>
+
+    <h3>2) Archivos</h3>
+    <div class="row">
+      <label>Accounts: <input id="fileAccounts" type="file" accept="application/json" /></label>
+      <button id="btnUploadAccounts">Subir Accounts</button>
+    </div>
+    <div class="row">
+      <label>Categories: <input id="fileCategories" type="file" accept="application/json" /></label>
+      <button id="btnUploadCategories">Subir Categories</button>
+    </div>
+
+    <h3>Logs</h3>
+    <pre id="log"></pre>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-app.js';
+    import {
+      initializeFirestore,
+      persistentLocalCache,
+      persistentMultipleTabManager,
+      setDoc, doc, serverTimestamp
+    } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-firestore.js';
+    import {
+      getAuth, setPersistence, browserLocalPersistence,
+      createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged
+    } from 'https://www.gstatic.com/firebasejs/10.12.4/firebase-auth.js';
+
+    // 1) Pega tu configuración aquí
+    const firebaseConfig = {
+    apiKey: "AIzaSyCcYeGzD1BJh0Hl9iOLBXHge31HxvAPiig",
+    authDomain: "control-de-gastos-169e6.firebaseapp.com",
+    projectId: "control-de-gastos-169e6",
+    storageBucket: "control-de-gastos-169e6.firebasestorage.app",
+    messagingSenderId: "772820467048",
+    appId: "1:772820467048:web:89913e1cef699444ef6add"
+  };
+
+    const app = initializeApp(firebaseConfig);
+    const db = initializeFirestore(app, {
+      localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+    });
+    const auth = getAuth(app);
+    await setPersistence(auth, browserLocalPersistence).catch(() => {});
+
+    const $ = (id) => document.getElementById(id);
+    const log = (msg, cls) => {
+      const el = $('log');
+      const line = document.createElement('div');
+      line.textContent = msg;
+      if (cls) line.className = cls;
+      el.appendChild(line);
+      el.scrollTop = el.scrollHeight;
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) log(`✅ Signed in: ${user.email}`, 'ok');
+      else log('ℹ️ Not signed in');
+    });
+
+    $('btnSignUp').onclick = async () => {
+      try {
+        await createUserWithEmailAndPassword(auth, $('email').value, $('password').value);
+        log('✅ SignUp ok', 'ok');
+      } catch (e) { log('❌ SignUp error: ' + e.message, 'err'); }
+    };
+
+    $('btnSignIn').onclick = async () => {
+      try {
+        await signInWithEmailAndPassword(auth, $('email').value, $('password').value);
+        log('✅ SignIn ok', 'ok');
+      } catch (e) { log('❌ SignIn error: ' + e.message, 'err'); }
+    };
+
+    $('btnSignOut').onclick = async () => { await signOut(auth); log('👋 Signed out'); };
+
+    async function readJsonFile(inputEl) {
+      const file = inputEl.files?.[0];
+      if (!file) throw new Error('Selecciona un archivo .json');
+      const text = await file.text();
+      return JSON.parse(text);
+    }
+
+    async function upsertArray(collectionName, arr) {
+      if (!Array.isArray(arr)) throw new Error('El JSON debe ser un array de objetos');
+      for (const item of arr) {
+        if (!item.id) throw new Error(`Falta "id" en un item de ${collectionName}`);
+        const data = {
+          ...item,
+          updatedAt: serverTimestamp(),
+          createdAt: item.createdAt ?? serverTimestamp()
+        };
+        await setDoc(doc(db, collectionName, item.id), data, { merge: true });
+        log(`✓ ${collectionName}/${item.id}`, 'ok');
+      }
+      log(`✅ ${collectionName}: ${arr.length} documentos procesados.`, 'ok');
+    }
+
+    $('btnUploadAccounts').onclick = async () => {
+      try {
+        const data = await readJsonFile($('fileAccounts'));
+        await upsertArray('accounts', data);
+      } catch (e) { log('❌ Accounts: ' + e.message, 'err'); }
+    };
+
+    $('btnUploadCategories').onclick = async () => {
+      try {
+        const data = await readJsonFile($('fileCategories'));
+        await upsertArray('categories', data);
+      } catch (e) { log('❌ Categories: ' + e.message, 'err'); }
+    };
+  </script>
+</body>
+</html>
