@@ -1,0 +1,18 @@
+[
+  { "id": "cat_mortgage", "name": "Hipoteca", "icon": "🏠", "type": "expense", "isActive": true, "order": 1, "householdId": "household_default" },
+  { "id": "cat_utilities", "name": "Servicios (luz, agua, gas, internet)", "icon": "💡", "type": "expense", "isActive": true, "order": 2, "householdId": "household_default" },
+  { "id": "cat_home_maint", "name": "Mantenimiento del hogar", "icon": "🛠️", "type": "expense", "isActive": true, "order": 3, "householdId": "household_default" },
+  { "id": "cat_restaurants", "name": "Restaurantes y comida fuera", "icon": "🍴", "type": "expense", "isActive": true, "order": 4, "householdId": "household_default" },
+  { "id": "cat_snacks", "name": "Gusgueras", "icon": "🍫", "type": "expense", "isActive": true, "order": 5, "householdId": "household_default" },
+  { "id": "cat_groceries", "name": "Supermercado y despensa", "icon": "🛒", "type": "expense", "isActive": true, "order": 6, "householdId": "household_default" },
+  { "id": "cat_fuel", "name": "Combustible", "icon": "⛽", "type": "expense", "isActive": true, "order": 7, "householdId": "household_default" },
+  { "id": "cat_car_maint", "name": "Mantenimiento del vehículo", "icon": "🚗", "type": "expense", "isActive": true, "order": 8, "householdId": "household_default" },
+  { "id": "cat_car_ins", "name": "Seguro del auto", "icon": "🛡️", "type": "expense", "isActive": true, "order": 9, "householdId": "household_default" },
+  { "id": "cat_msi", "name": "Meses sin intereses", "icon": "🕒", "type": "expense", "isActive": true, "order": 10, "householdId": "household_default" },
+  { "id": "cat_life_ins", "name": "Seguro de vida", "icon": "🛡️", "type": "expense", "isActive": true, "order": 11, "householdId": "household_default" },
+  { "id": "cat_parking", "name": "Estacionamiento y peaje", "icon": "🅿️", "type": "expense", "isActive": true, "order": 12, "householdId": "household_default" },
+  { "id": "cat_med_ins", "name": "Seguros médicos", "icon": "🏥", "type": "expense", "isActive": true, "order": 13, "householdId": "household_default" },
+  { "id": "cat_meds", "name": "Medicamentos", "icon": "💊", "type": "expense", "isActive": true, "order": 14, "householdId": "household_default" },
+  { "id": "cat_med_visits", "name": "Consultas médicas", "icon": "👨‍⚕️", "type": "expense", "isActive": true, "order": 15, "householdId": "household_default" },
+  { "id": "cat_entertain", "name": "Cine, teatro y conciertos", "icon": "🎥", "type": "expense", "isActive": true, "order": 16, "householdId": "household_default" }
+]
